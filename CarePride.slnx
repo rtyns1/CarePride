@@ -1,0 +1,9 @@
+<Solution>
+  <Project Path="Carepride.API/Carepride.API.csproj" />
+  <Project Path="CarePride.Application/CarePride.Application.csproj" />
+  <Project Path="CarePride.Desktop/CarePride.Desktop.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
+  <Project Path="CarePride.Domain/CarePride.Domain.csproj" />
+  <Project Path="CarePride.Infrastructure/CarePride.Infrastructure.csproj" />
+</Solution>
