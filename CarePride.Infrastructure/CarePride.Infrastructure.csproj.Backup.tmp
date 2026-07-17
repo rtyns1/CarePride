@@ -7,7 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Docs.Domain\" />
+    <ProjectReference Include="..\CarePride.Application\CarePride.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Docs.Infrastructure\" />
   </ItemGroup>
 
   <ItemGroup>

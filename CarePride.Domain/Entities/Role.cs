@@ -4,7 +4,9 @@ using System.Text;
 
 namespace CarePride.Domain.Entities
 {
-    internal class Role
+    public class Role
     {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty; // "Admin", "Teacher", "Secretary", "Bursar"
     }
 }
