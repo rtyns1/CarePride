@@ -1,24 +1,42 @@
-﻿# Build outputs
+# Build outputs
 bin/
 obj/
 .vs/
 
-# MAUI/Android bloat (recursive)
+# MAUI/Android bloat
 **/bin/
 **/obj/
-
-# User settings
 *.user
 *.suo
 
-# Platform-specific
+# Platform-specific caches
+*/obj/*
+*/bin/*
+**/Debug/
+**/Release/
+
+# Android
 *.apk
 *.dex
 *.class
 *.jar
+
+# iOS/Mac
+*.dSYM
+*.xarchive
+
+# Windows
 *.exe
 *.dll
 *.pdb
 *.msi
 *.msix
 *.cab
+
+# User settings
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.Backup.tmp
+*.tmp
