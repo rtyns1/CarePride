@@ -7,6 +7,7 @@ namespace CarePride.Domain.Entities
 {
     public class Teacher
     {
+
         public string? TeacherId { get; set; }
         public int? UserId { get; set; } // Nullable because a Teacher might not have a login yet, check user.cs class
         private string? _firstNameTeacher;
@@ -22,6 +23,7 @@ namespace CarePride.Domain.Entities
             }
         }
         private string? _lastNameTeacher;
+
         public string? LastName
         {
             get => _lastNameTeacher;
@@ -33,6 +35,7 @@ namespace CarePride.Domain.Entities
             }
         }
         private string? _email;
+
         public string? Email
         {
             get => _email;
@@ -63,6 +66,7 @@ namespace CarePride.Domain.Entities
         }
 
         private DateTime _dateOfBirth;
+
         public DateTime DateOfBirth
         {
             get => _dateOfBirth;
@@ -79,6 +83,7 @@ namespace CarePride.Domain.Entities
             }
         }
         private int? _age;
+
         public int Age
         {
             // age is something that we fetch, calculate from the date of birth, its not something we set.
@@ -92,7 +97,9 @@ namespace CarePride.Domain.Entities
                 return age;
             }
         }
+
         public DateTime HireDate{ get; set; } = DateTime.UtcNow;
         public bool IsActive { get; set; } = true; 
+
     }
 }
