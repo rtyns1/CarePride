@@ -7,8 +7,8 @@ namespace CarePride.Domain.Entities
     {
         public int Id { get; set; }
 
-        private string _name;
-        public string Name
+        private string? _name;
+        public string? Name
         {
             get => _name;
             set
@@ -19,8 +19,8 @@ namespace CarePride.Domain.Entities
             }
         }
 
-        private string _code;
-        public string Code
+        private string? _code;
+        public string? Code
         {
             get => _code;
             set

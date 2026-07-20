@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Reflection.Emit;
 using System.Text;
 using CarePride.Domain;
 using CarePride.Domain.Entities;
@@ -20,10 +19,14 @@ namespace CarePride.Infrastructure.Data
         public DbSet<User> users { get; set; }
         public DbSet<Role> roles { get; set; }
         // still alot of these left, for subjects, cass, etc etc
+        public DbSet<Class> Classes { get; set; }
+        public DbSet<Subject> Subjects { get; set; }
+        public DbSet<Enrollment> Enrollments { get; set; }
+        public DbSet<ClassSubject> ClassSubjects { get; set; }
 
 
         // configure entity relationships, constraints and seedings in the model below::
-        public override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             // STUDENT
@@ -58,12 +61,95 @@ namespace CarePride.Infrastructure.Data
                 entity.Property(t => t.IsActive).IsRequired().HasDefaultValue(true);
 
             });
+
             // CLASS
+            modelBuilder.Entity<Class>(entity =>
+            {
+                entity.HasKey(c => c.ClassId);
+                entity.Property(c => c.ClassName).IsRequired().HasMaxLength(50);
+                entity.Property(c => c.GradeLevel).IsRequired();
+                entity.Property(c => c.IsActive).IsRequired().HasDefaultValue(true);
+                entity.Property(c => c.CreatedAt).IsRequired();
+                entity.Property(c => c.UpdatedAt).IsRequired();
 
+                //relationships that teacher has with class
+                entity.HasOne<Teacher>()
+                     .WithMany()
+                     .HasForeignKey(c => c.TeacherId)
+                     .OnDelete(DeleteBehavior.Restrict);
 
+            });
+            modelBuilder.Entity<Subject>(entity => 
+            {
+                entity.HasKey(s => s.Id);
+                entity.Property(s => s.Name).IsRequired().HasMaxLength(100);
+                entity.Property(s => s.Code).IsRequired().HasMaxLength(20);
+                entity.HasIndex(s => s.Code).IsUnique();
+                entity.Property(s => s.Description).HasMaxLength(500);
 
+            });
+            // ---- ENROLLMENT (Junction Table) ----
+            modelBuilder.Entity<Enrollment>(entity =>
+            {
+                entity.HasKey(e => e.EnrollmentId);
+                entity.Property(e => e.EnrollmentDate).IsRequired();
+                entity.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);
 
+                // Relationship: Enrollment belongs to one Student
+                entity.HasOne<Student>()
+                      .WithMany()
+                      .HasForeignKey(e => e.StudentId)
+                      .OnDelete(DeleteBehavior.Cascade);
 
+                // Relationship: Enrollment belongs to one Class
+                entity.HasOne<Class>()
+                      .WithMany()
+                      .HasForeignKey(e => e.ClassId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // ---- USER ----
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasKey(u => u.Id);
+                entity.Property(u => u.Username).IsRequired().HasMaxLength(50);
+                entity.HasIndex(u => u.Username).IsUnique();
+                entity.Property(u => u.PasswordHash).IsRequired().HasMaxLength(255);
+                entity.Property(u => u.RefreshToken).HasMaxLength(255);
+
+                // Relationship: User belongs to one Role
+                entity.HasOne<Role>()
+                      .WithMany()
+                      .HasForeignKey(u => u.RoleId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // ---- ROLE ----
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.HasKey(r => r.Id);
+                entity.Property(r => r.Name).IsRequired().HasMaxLength(20);
+                entity.HasIndex(r => r.Name).IsUnique();
+            });
+
+            // ---- CLASS SUBJECT (Junction Table) ----
+            modelBuilder.Entity<ClassSubject>(entity =>
+            {
+                entity.HasKey(cs => cs.Id);
+
+                // Relationship: ClassSubject belongs to one Class
+                entity.HasOne<Class>()
+                      .WithMany()
+                      .HasForeignKey(cs => cs.ClassId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                // Relationship: ClassSubject belongs to one Subject
+                entity.HasOne<Subject>()
+                      .WithMany()
+                      .HasForeignKey(cs => cs.SubjectId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+            //updaes can and alway will be made, that is why we have version control and repositories
 
         }
     }
